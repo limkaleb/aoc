@@ -45,22 +45,18 @@ func process(input string) int {
 			key_found_index_2 := strings.LastIndex(item, key.Interface().(string))
 			current_number := map_number[key.String()]
 			if key_found_index_first == -1 && key_found_index_1 >= 0 {
-				fmt.Println("keyy1: ", key)
 				key_found_index_first = key_found_index_1
 				first = 10 * current_number
 			}
 			if key_found_index_last == -1 && key_found_index_2 >= 0 {
-				fmt.Println("keyy2: ", key)
 				key_found_index_last = key_found_index_2
 				second = current_number
 			}
 			if key_found_index_1 >= 0 && key_found_index_first > key_found_index_1 {
-				fmt.Println("keyy3: ", key)
 				key_found_index_first = key_found_index_1
 				first = 10 * current_number
 			}
 			if key_found_index_last >= 0 && key_found_index_last < key_found_index_2 {
-				fmt.Println("keyy4: ", key)
 				key_found_index_last = key_found_index_2
 				second = current_number
 			}
@@ -70,19 +66,15 @@ func process(input string) int {
 		fmt.Println("first and second: ", first, second)
 		for j := 0; j < len(item); j++ {
 			if (unicode.IsDigit(chars[j]) && j < key_found_index_first) || (unicode.IsDigit(chars[j]) && key_found_index_first == -1) {
-				// fmt.Println("res: ", j, chars[j])
 				first, _ = strconv.Atoi(string(item[j]))
 				first = 10 * first
-				// fmt.Println("fffffff: ", first)
 				break
 			}
 		}
 
 		for k := len(item) - 1; k >= 0; k-- {
 			if (unicode.IsDigit(chars[k]) && k > key_found_index_last) || (unicode.IsDigit(chars[k]) && key_found_index_last == -1) {
-				// fmt.Println("res: ", k, chars[k])
 				second, _ = strconv.Atoi(string(item[k]))
-				// fmt.Println("sssss: ", second)
 				break
 			}
 		}
