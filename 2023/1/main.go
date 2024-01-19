@@ -62,8 +62,6 @@ func process(input string) int {
 			}
 		}
 
-		fmt.Println("---- first, last: ", key_found_index_first, key_found_index_last)
-		fmt.Println("first and second: ", first, second)
 		for j := 0; j < len(item); j++ {
 			if (unicode.IsDigit(chars[j]) && j < key_found_index_first) || (unicode.IsDigit(chars[j]) && key_found_index_first == -1) {
 				first, _ = strconv.Atoi(string(item[j]))
