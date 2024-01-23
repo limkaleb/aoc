@@ -31,20 +31,30 @@ func isNumeric(str string) bool {
 func process(input string) int {
 	cur_num := 0
 	total := 0
-	isAdjacent := false
+	// isAdjacent := false
+	isStarAdjacent := false
+	cur_star_idx := ""
+	starMult := 0
+	starMap := make(map[string][]int) // map of star index and current number
+
 	lines := strings.Split(input, "\n")
 	arr := build2DArray(input, len(lines))
+
 	for i, line := range lines {
 		for j, li := range line {
 			c := rune(li)
+			// check every single char
 			if unicode.IsDigit(c) {
 				// loop and check around current position
 				for _, cr := range []int{-1,0,1} {
 					for _, cc := range []int{-1,0,1} {
 						if (i+cr)>=0 && (i+cr)<len(lines) && (j+cc)>=0 && (j+cc)<len(lines) {
 							cur_check := arr[i+cr][j+cc]
-							if !isNumeric(cur_check) && string(cur_check) != "."  {
-								isAdjacent = true
+							if !isNumeric(cur_check) && string(cur_check) == "*" {
+								isStarAdjacent = true
+								cur_row :=  strconv.Itoa(i+cr)
+								cur_col := strconv.Itoa(j+cc)
+								cur_star_idx = cur_row + cur_col						
 							}
 						}
 					}
@@ -53,28 +63,36 @@ func process(input string) int {
 				cur_num = cur_num*10 + n
 				// handle last char is number
 				if j == len(line)-1 {
-					if cur_num != 0 {
-						if isAdjacent {
-							total += cur_num
+					if cur_num != 0 && isStarAdjacent {
+						starMap[cur_star_idx] = append(starMap[cur_star_idx], cur_num)
+						if len(starMap[cur_star_idx]) == 2 {
+							starMult = starMap[cur_star_idx][0] * starMap[cur_star_idx][1]
+							total += starMult
 						}
 						cur_num = 0
-						isAdjacent = false
+						isStarAdjacent = false
+						cur_star_idx = ""
 					}
 				}
 			} else {
 				if cur_num != 0 {
-					if isAdjacent {
-						// fmt.Println("RESULT: ", cur_num, total)
-						total += cur_num
+					if isStarAdjacent {
+						// fmt.Println("RESULT: ", cur_num, isStarAdjacent, cur_star_idx)
+						starMap[cur_star_idx] = append(starMap[cur_star_idx], cur_num)
+						if len(starMap[cur_star_idx]) == 2 {
+							// fmt.Println("calculate here: ", starMap[cur_star_idx])
+							starMult = starMap[cur_star_idx][0] * starMap[cur_star_idx][1]
+							total += starMult
+						}
 					}
 					cur_num = 0
-					isAdjacent = false
+					isStarAdjacent = false
+					cur_star_idx = ""
 				}
 			}
 		}
 		cur_num = 0
-		isAdjacent = false
-		// fmt.Println()
+		// isAdjacent = false
 	}
 
 	return total
@@ -87,8 +105,6 @@ func main() {
 		log.Fatal(err)
 	}
 	// fmt.Println(string(input))
-
 	res := process(string(input))
-
-	fmt.Println(res)
+	fmt.Println("result: ", res)
 }
